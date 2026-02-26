@@ -1,13 +1,16 @@
 import os
-import psycopg2
 from flask import Flask, request, jsonify
+import mysql.connector
 
 app = Flask(__name__)
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-def get_db_connection():
-    return psycopg2.connect(DATABASE_URL)
+# MySQL connection
+db = mysql.connector.connect(
+    host=os.getenv("mysql.railway.internal"),
+    user=os.getenv("root"),
+    password=os.getenv("OtmzInrhblxgtvKrmEKijUGvxPZeJqaW"),
+    database=os.getenv("railway")
+)
 
 @app.route("/")
 def home():
@@ -21,25 +24,24 @@ def contact():
     email = data.get("email")
     message = data.get("message")
 
-    conn = get_db_connection()
-    cur = conn.cursor()
+    cursor = db.cursor()
 
-    cur.execute("""
+    # MySQL table creation (correct syntax)
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS contacts (
-            id SERIAL PRIMARY KEY,
-            name TEXT,
-            email TEXT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255),
+            email VARCHAR(255),
             message TEXT
         )
     """)
 
-    cur.execute(
-        "INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)",
-        (name, email, message)
-    )
+    sql = "INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)"
+    values = (name, email, message)
 
-    conn.commit()
-    cur.close()
-    conn.close()
+    cursor.execute(sql, values)
+    db.commit()
+
+    cursor.close()
 
     return jsonify({"message": "Contact saved successfully!"})
