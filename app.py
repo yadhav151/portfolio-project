@@ -5,14 +5,14 @@ from urllib.parse import urlparse
 
 app = Flask(__name__, static_folder="frontend",static_url_path="")
 
-db = None
+def get_db_connection():
+    url_string = os.environ.get("MYSQL_URL")
+    if not url_string:
+        return None
 
-url_string = os.environ.get("MYSQL_URL")
-
-if url_string:
     url = urlparse(url_string)
 
-    db = mysql.connector.connect(
+    return mysql.connector.connect(
         host=url.hostname,
         user=url.username,
         password=url.password,
