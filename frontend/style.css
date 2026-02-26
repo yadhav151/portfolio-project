@@ -1,0 +1,17 @@
+body {
+    font-family: Arial;
+    margin: 0;
+    padding: 0;
+    background: #111;
+    color: white;
+}
+
+section {
+    padding: 40px;
+    text-align: center;
+}
+
+.hero {
+    background: linear-gradient(to right, #000, #333);
+    height: 100vh;
+}
