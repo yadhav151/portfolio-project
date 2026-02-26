@@ -1,9 +1,9 @@
 import os
-from flask import Flask, request, send_from_directory, jsonify
+from flask import Flask, request, jsonify
 import mysql.connector
 from urllib.parse import urlparse
 
-app = Flask(__name__, static_folder="frontend",static_url_path="")
+app = Flask(__name__, static_folder="frontend", static_url_path="")
 
 def get_db_connection():
     url_string = os.environ.get("MYSQL_URL")
@@ -19,10 +19,10 @@ def get_db_connection():
         database=url.path.lstrip('/'),
         port=url.port
     )
+
 @app.route("/")
 def home():
-    return 
-app.send_static_file("index.html")
+    return app.send_static_file("index.html")
 
 @app.route("/contact", methods=["POST"])
 def contact():
@@ -37,10 +37,11 @@ def contact():
         email = request.form.get("email")
         message = request.form.get("message")
 
+    db = get_db_connection()
     if not db:
         return jsonify({"error": "Database not connected"}), 500
 
-    cursor = db.cursor()   # ← THIS WAS MISSING
+    cursor = db.cursor()
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS contacts (
@@ -54,6 +55,8 @@ def contact():
     sql = "INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)"
     cursor.execute(sql, (name, email, message))
     db.commit()
+
     cursor.close()
+    db.close()
 
     return jsonify({"message": "Contact saved successfully!"})
