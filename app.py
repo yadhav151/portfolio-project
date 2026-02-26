@@ -1,16 +1,15 @@
 import os
-from flask import Flask, request, jsonify
 import mysql.connector
+from urllib.parse import urlparse
 
-app = Flask(__name__)
+url = urlparse(os.environ.get("MYSQL_URL"))
 
-# MySQL connection
 db = mysql.connector.connect(
-    host=os.getenv("MYSQLHOST"),
-    user=os.getenv("MYSQLUSER"),
-    password=os.getenv("MYSQLPASSWORD"),
-    database=os.getenv("MYSQLDATABASE"),
-    port=int(os.getenv("MYSQLPORT", 3306))
+    host=url.hostname,
+    user=url.username,
+    password=url.password,
+    database=url.path.lstrip('/'),
+    port=url.port
 )
 @app.route("/")
 def home():
