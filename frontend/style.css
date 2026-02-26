@@ -1,17 +1,107 @@
-body {
-    font-family: Arial;
+* {
     margin: 0;
     padding: 0;
-    background: #111;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #0f172a;
     color: white;
 }
 
-section {
-    padding: 40px;
-    text-align: center;
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background: #111827;
+    position: fixed;
+    width: 100%;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
 }
 
 .hero {
-    background: linear-gradient(to right, #000, #333);
     height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1e3a8a, #0f172a);
+    text-align: center;
+}
+
+.hero span {
+    color: #38bdf8;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 25px;
+    background: #38bdf8;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+section {
+    padding: 100px 60px;
+    text-align: center;
+}
+
+.skill-box {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.skill-box div {
+    background: #1e293b;
+    padding: 15px 30px;
+    border-radius: 5px;
+}
+
+.project-card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+    margin: auto;
+}
+
+input, textarea {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background: #38bdf8;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #111827;
 }
