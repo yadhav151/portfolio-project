@@ -1,31 +1,46 @@
 import os
+from flask import Flask, request, send_from_directory, jsonify
 import mysql.connector
 from urllib.parse import urlparse
 
-url = urlparse(os.environ.get("MYSQL_URL"))
+app = Flask(__name__, static_folder=".")
 
-db = mysql.connector.connect(
-    host=url.hostname,
-    user=url.username,
-    password=url.password,
-    database=url.path.lstrip('/'),
-    port=url.port
-)
+db = None
+
+url_string = os.environ.get("MYSQL_URL")
+
+if url_string:
+    url = urlparse(url_string)
+
+    db = mysql.connector.connect(
+        host=url.hostname,
+        user=url.username,
+        password=url.password,
+        database=url.path.lstrip('/'),
+        port=url.port
+    )
 @app.route("/")
 def home():
-    return "Backend is running!"
+    return send_from_directory(".", "index.html")
 
 @app.route("/contact", methods=["POST"])
 def contact():
-    data = request.get_json()
 
-    name = data.get("name")
-    email = data.get("email")
-    message = data.get("message")
+    if request.is_json:
+        data = request.get_json()
+        name = data.get("name")
+        email = data.get("email")
+        message = data.get("message")
+    else:
+        name = request.form.get("name")
+        email = request.form.get("email")
+        message = request.form.get("message")
 
-    cursor = db.cursor()
+    if not db:
+        return jsonify({"error": "Database not connected"}), 500
 
-    # MySQL table creation (correct syntax)
+    cursor = db.cursor()   # ← THIS WAS MISSING
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS contacts (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -36,11 +51,8 @@ def contact():
     """)
 
     sql = "INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)"
-    values = (name, email, message)
-
-    cursor.execute(sql, values)
+    cursor.execute(sql, (name, email, message))
     db.commit()
-
     cursor.close()
 
     return jsonify({"message": "Contact saved successfully!"})
