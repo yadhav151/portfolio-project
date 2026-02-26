@@ -1,17 +1,18 @@
 document.getElementById("contactForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
-    const data = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        message: document.getElementById("message").value
-    };
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
 
-    await fetch("http://localhost:5000/contact", {
+    const response = await fetch("https://portfolio-project-production-aaa3.up.railway.app/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email, message })
     });
 
-    alert("Message Sent!");
+    const result = await response.json();
+    alert(result.message);
 });
