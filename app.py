@@ -3,7 +3,7 @@ from flask import Flask, request, send_from_directory, jsonify
 import mysql.connector
 from urllib.parse import urlparse
 
-app = Flask(__name__, static_folder=".")
+app = Flask(__name__, static_folder="frontend",static_url_path="")
 
 db = None
 
@@ -21,7 +21,8 @@ if url_string:
     )
 @app.route("/")
 def home():
-    return send_from_directory(".", "index.html")
+    return 
+app.send_static_file("index.html")
 
 @app.route("/contact", methods=["POST"])
 def contact():
