@@ -10,7 +10,7 @@ db = mysql.connector.connect(
     user=os.getenv("root"),
     password=os.getenv("OtmzInrhblxgtvKrmEKijUGvxPZeJqaW"),
     database=os.getenv("railway"),
-    port=int(os.getenv("3306", 3306))
+    port=int(os.getenv("3306"))
 )
 @app.route("/")
 def home():
